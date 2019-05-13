@@ -1,0 +1,82 @@
+# Ruutu language file
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.ruutu\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-17 23:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr ""
+
+msgctxt "#30001"
+msgid "Email"
+msgstr ""
+
+msgctxt "#30002"
+msgid "Password"
+msgstr ""
+
+msgctxt "#30003"
+msgid "Information"
+msgstr ""
+
+msgctxt "#30004"
+msgid "Other"
+msgstr ""
+
+msgctxt "#30005"
+msgid "Reset credentials"
+msgstr ""
+
+msgctxt "#30006"
+msgid "Error"
+msgstr ""
+
+msgctxt "#30007"
+msgid "Search"
+msgstr ""
+
+msgctxt "#30008"
+msgid "Results: "
+msgstr ""
+
+msgctxt "#30009"
+msgid "Shows and videos per page"
+msgstr ""
+
+msgctxt "#30010"
+msgid "UPCOMING"
+msgstr ""
+
+msgctxt "#30011"
+msgid "My Ruutu"
+msgstr ""
+
+msgctxt "#30012"
+msgid "Ruutu+ subscription is needed for playing this video"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Next page"
+msgstr ""
+
+msgctxt "#30014"
+msgid "Show Ruutu+ logo in thumbs"
+msgstr ""
+
+msgctxt "#30015"
+msgid "Add to favorites (Ruutu)"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Delete from favorites (Ruutu)"
+msgstr ""

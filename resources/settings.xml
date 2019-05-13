@@ -1,0 +1,11 @@
+<settings>
+  <category label="30000">
+    <setting id="username" type="text" label="30001" default=""/>
+    <setting id="password" type="text" label="30002" option="hidden" default=""/>
+    <setting id="reset_credentials" type="action" label="30005" action="RunPlugin(plugin://plugin.video.ruutu/?setting=reset_credentials)"/>
+  </category>
+  <category label="30004">
+    <setting id="items_per_page" type="number" label="30009" default="25"/>
+    <setting id="ruutuplus_sticker" type="bool" label="30014" default="false"/>
+  </category>
+</settings>

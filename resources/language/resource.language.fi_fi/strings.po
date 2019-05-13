@@ -1,0 +1,82 @@
+# Ruutu language file
+msgid ""
+msgstr ""
+"Project-Id-Version: plugin.video.ruutu\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-01-17 23:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Finnish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "#30000"
+msgid "General"
+msgstr "Yleiset"
+
+msgctxt "#30001"
+msgid "Email"
+msgstr "Sähköposti"
+
+msgctxt "#30002"
+msgid "Password"
+msgstr "Salasana"
+
+msgctxt "#30003"
+msgid "Information"
+msgstr "Info"
+
+msgctxt "#30004"
+msgid "Other"
+msgstr "Muut"
+
+msgctxt "#30005"
+msgid "Reset credentials"
+msgstr "Nollaa käyttäjätiedot"
+
+msgctxt "#30006"
+msgid "Error"
+msgstr "Virhe"
+
+msgctxt "#30007"
+msgid "Search"
+msgstr "Etsi"
+
+msgctxt "#30008"
+msgid "Results: "
+msgstr "Tulokset: "
+
+msgctxt "#30009"
+msgid "Shows and videos per page"
+msgstr "Ohjelmia ja videoita per sivu"
+
+msgctxt "#30010"
+msgid "UPCOMING"
+msgstr "TULOSSA"
+
+msgctxt "#30011"
+msgid "My Ruutu"
+msgstr "Oma Ruutu"
+
+msgctxt "#30012"
+msgid "Ruutu+ subscription is needed for playing this video"
+msgstr "Tämän videon toisto vaatii Ruutu+ tilauksen"
+
+msgctxt "#30013"
+msgid "Next page"
+msgstr "Seuraava sivu"
+
+msgctxt "#30014"
+msgid "Show Ruutu+ logo in thumbs"
+msgstr "Näytä Ruutu+ logo pikkukuvissa"
+
+msgctxt "#30015"
+msgid "Add to favorites (Ruutu)"
+msgstr "Lisää suosikiksi (Ruutu)"
+
+msgctxt "#30016"
+msgid "Delete from favorites (Ruutu)"
+msgstr "Poista suosikeista (Ruutu)"
