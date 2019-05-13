@@ -10,4 +10,4 @@ This addon is unofficial and it is not supported by Sanoma Media Finland Oy / Ne
 - Add and remove Ruutu favorites in Kodi
 - Live TV channels
 - Sport streams
-- All type of videos (Ruutu+, DRM protected and normal)
+- Ruutu+ (you need Ruutu+ subscription), DRM protected and normal videos
