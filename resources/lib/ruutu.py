@@ -250,6 +250,7 @@ class Ruutu(object):
         return data
 
     def get_page(self, url):
+
         data = json.loads(self.make_request(url, 'get'))
 
         return data
@@ -258,8 +259,9 @@ class Ruutu(object):
         url = 'https://prod-component-api.nm-services.nelonenmedia.fi/api/{page_type}/{page_id}'.format(page_type=page_type, page_id=page_id)
 
         params = {
-            'userroles': userroles,
-            'clients': 'ruutufi,ruutufi-react'
+            'app': 'ruutu',
+            'client': 'web',
+            'userrole': userroles
         }
 
         data = json.loads(self.make_request(url, 'get', params=params))

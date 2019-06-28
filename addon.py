@@ -12,31 +12,28 @@ handle = int(sys.argv[1])
 helper = KodiHelper(base_url, handle)
 
 def list_pages():
-    pages = helper.r.get_page('https://prod-component-api.nm-services.nelonenmedia.fi/api/navigation/')
+    pages = helper.r.get_page('https://prod-component-api.nm-services.nelonenmedia.fi/api/navigation/?app=ruutu&client=web')
 
     for page in pages['main']:
-        for client in page['clients']:
-            # Show only pages for ruutufi
-            if client == 'ruutufi':
-                if page.get('children'):
-                    params = {
-                        'action': 'list_children_pages',
-                        'children': json.dumps(page['children'])
-                    }
+        if page.get('children'):
+            params = {
+                'action': 'list_children_pages',
+                'children': json.dumps(page['children'])
+            }
 
-                    helper.add_item(page['title'], params)
+            helper.add_item(page['title'], params)
 
-                # Pages without children pages
-                else:
-                    # Hide frontpage category
-                    if page['action']['page_id'] != 200:
-                        params = {
-                            'action': 'list_grids',
-                            'page_id': str(page['action']['page_id']),
-                            'userroles': helper.check_userrole()
-                        }
+        # Pages without children pages
+        else:
+            # Hide frontpage category
+            if page['action']['page_id'] != 200:
+                params = {
+                    'action': 'list_grids',
+                    'page_id': str(page['action']['page_id']),
+                    'userroles': helper.check_userrole()
+                }
 
-                        helper.add_item(page['title'], params)
+                helper.add_item(page['title'], params)
 
     # Search
     helper.add_item(helper.language(30007), params={'action': 'search'})
@@ -60,18 +57,15 @@ def list_pages():
 # List TV -> Jännitys ja draama, Cirkus - Brittidaama, Kaikki ohjelmat etc
 def list_children_pages(children):
     for page in json.loads(children):
-        for client in page['clients']:
-            # Show only pages for ruutufi
-            if client == 'ruutufi':
-                # Check that it is actually category and not just placeholder
-                if page.get('action'):
-                    params = {
-                        'action': 'list_grids',
-                        'page_id': str(page['action']['page_id']),
-                        'userroles': helper.check_userrole()
-                    }
+        # Check that it is actually category and not just placeholder
+        if page.get('action'):
+            params = {
+                'action': 'list_grids',
+                'page_id': str(page['action']['page_id']),
+                'userroles': helper.check_userrole()
+            }
 
-                    helper.add_item(page['label']['text'], params)
+            helper.add_item(page['label']['text'], params)
 
     helper.eod()
 
@@ -478,6 +472,9 @@ def list_grid_content(url, ruutu_params, kodi_page):
 
 def list_seasons(series_id):
     ruutu_params = {
+        'app': 'ruutu',
+        'client': 'web',
+        'userrole': helper.check_userrole(),
         'current_series_id': series_id
     }
 
