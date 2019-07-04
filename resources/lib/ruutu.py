@@ -261,7 +261,7 @@ class Ruutu(object):
         params = {
             'app': 'ruutu',
             'client': 'web',
-            'userrole': userroles
+            'userroles': userroles
         }
 
         data = json.loads(self.make_request(url, 'get', params=params))
