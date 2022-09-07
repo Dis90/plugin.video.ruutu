@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from urlparse import parse_qsl
+from urllib.parse import parse_qsl
 import json
 import re
 
@@ -12,7 +12,7 @@ handle = int(sys.argv[1])
 helper = KodiHelper(base_url, handle)
 
 def list_pages():
-    pages = helper.r.get_page('https://prod-component-api.nm-services.nelonenmedia.fi/api/navigation/?app=ruutu&client=web')
+    pages = helper.r.get_page('https://prod-component-api.nm-services.nelonenmedia.fi/api/navigation?app=ruutu&client=web')
 
     for page in pages['main']:
         if page.get('children'):
@@ -102,12 +102,18 @@ def list_grids(page_id, userroles):
     grids = helper.r.get_page_json('page', page_id, userroles)
 
     for grid in grids['components']:
+        if 'label' not in grid:
+            continue
+        
+        if grid['label'] is None:
+            continue
+
         # 545 & 665 = Urheilulähetykset, 687 & 689 = Tv-opas, 6530200 = Tulossa olevat sarjat, 653 & 653200 = Tulossa olevat elokuvat
         hide_grids = [545, 665, 687, 689, 6530200, 653, 653200]
         if grid['label'].get('text') and grid['id'] not in hide_grids:
 
             # Jatka katsomista
-            if 'user_unfinished_videos' in grid['content']['query']['params'].keys():
+            if 'user_unfinished_videos' in list(grid['content']['query']['params'].keys()):
                 history = helper.r.get_page(
                     'https://gatling.nelonenmedia.fi/storage/history?unfinished=true&gatling_token=' +
                     helper.r.get_credentials()[
@@ -126,7 +132,7 @@ def list_grids(page_id, userroles):
                 }
 
             # Omat suosikit
-            elif 'user_favorite_series' in grid['content']['query']['params'].keys():
+            elif 'user_favorite_series' in list(grid['content']['query']['params'].keys()):
                 favorite = helper.r.get_page(
                     'https://gatling.nelonenmedia.fi/storage/favorite?gatling_token=' + helper.r.get_credentials()[
                         'token'])
@@ -180,11 +186,16 @@ def list_grid_content(url, ruutu_params, kodi_page):
             'current_series_id': json.loads(ruutu_params)['current_series_id']
         }
 
-        tvshow_extra_info = helper.r.get_grid_json('https://prod-component-api.nm-services.nelonenmedia.fi/api/component/26001', json.dumps(ruutu_params2))
+        # Not currently working
+        # tvshow_extra_info = helper.r.get_grid_json('https://prod-component-api.nm-services.nelonenmedia.fi/api/component/26001', json.dumps(ruutu_params2))
+        # genre = tvshow_extra_info['items'][0]['subtitle'].split(', ')
+        # tvshowtitle = tvshow_extra_info['items'][0]['title']
 
-        genre = tvshow_extra_info['items'][0]['subtitle'].split(', ')
-        tvshowtitle = tvshow_extra_info['items'][0]['title']
+    # Incase we are accessing parent component, dive into content level
+    if 'components' in items:
+        items = items['components'][0]['content']
 
+    # Loop through items
     for item in items['items']:
         if item['link']: # Movie or episode is available
             # Movies and episodes
@@ -242,9 +253,9 @@ def list_grid_content(url, ruutu_params, kodi_page):
                     total = None
 
                 # Get extra info for episodes
-                if json.loads(ruutu_params).get('current_series_id'):
-                    info['tvshowtitle'] = tvshowtitle
-                    info['genre'] = genre
+                # if json.loads(ruutu_params).get('current_series_id'):
+                    # info['tvshowtitle'] = tvshowtitle
+                    # info['genre'] = genre
 
                 # Get season and episode number from description
                 if item.get('description'):
@@ -425,9 +436,9 @@ def list_grid_content(url, ruutu_params, kodi_page):
                     }
 
                     # Get extra info for episodes
-                    if json.loads(ruutu_params).get('current_series_id'):
-                        info['tvshowtitle'] = tvshowtitle
-                        info['genre'] = genre
+                    # if json.loads(ruutu_params).get('current_series_id'):
+                        # info['tvshowtitle'] = tvshowtitle
+                        # info['genre'] = genre
 
                     # Get season and episode number from description
                     if item.get('description'):
@@ -474,27 +485,30 @@ def list_seasons(series_id):
     ruutu_params = {
         'app': 'ruutu',
         'client': 'web',
-        'userrole': helper.check_userrole(),
-        'current_series_id': series_id
+        'userroles': helper.check_userrole()
     }
 
-    seasons = helper.r.get_grid_json('https://prod-component-api.nm-services.nelonenmedia.fi/api/component/26003', json.dumps(ruutu_params))
+    seasons = helper.r.get_grid_json('https://prod-component-api.nm-services.nelonenmedia.fi/api/series/3347614', json.dumps(ruutu_params))
 
-    for season in seasons['items']:
+    for season in seasons['components']:
 
-        title = season['label'].get('text')
-        params = {
-            'action': 'list_grid_content',
-            'url': season['content']['items'][0]['content']['query']['url'],
-            'ruutu_params': json.dumps(season['content']['items'][0]['content']['query']['params']),
-            'kodi_page': 1
-        }
+        if season['link'] is not None:
 
-        info = {
-            'mediatype': 'season'
-        }
+            title = season['label'].get('text')
+            ruutu_params2 = season['content']['query']['params']
+            ruutu_params2['userroles'] = helper.check_userrole()
+            params = {
+                'action': 'list_grid_content',
+                'url': 'https://prod-component-api.nm-services.nelonenmedia.fi/api' + season['link']['href'],
+                'ruutu_params': json.dumps(ruutu_params2),
+                'kodi_page': 1
+            }
 
-        helper.add_item(title, params, info=info, content='seasons')
+            info = {
+                'mediatype': 'season'
+            }
+
+            helper.add_item(title, params, info=info, content='seasons')
 
     helper.eod()
 

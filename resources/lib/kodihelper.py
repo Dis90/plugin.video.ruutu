@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import os
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import re
 import sys
 
-from ruutu import Ruutu
+from .ruutu import Ruutu
 
 import xbmc
 import xbmcvfs
@@ -16,7 +16,7 @@ import inputstreamhelper
 import AddonSignals
 
 from PIL import Image
-from StringIO import StringIO
+from io import StringIO
 
 class KodiHelper(object):
     def __init__(self, base_url=None, handle=None):
@@ -157,7 +157,7 @@ class KodiHelper(object):
         if menu:
             listitem.addContextMenuItems(menu)
 
-        recursive_url = self.base_url + '?' + urllib.urlencode(params)
+        recursive_url = self.base_url + '?' + urllib.parse.urlencode(params)
 
         if items is False:
             xbmcplugin.addDirectoryItem(self.handle, recursive_url, listitem, folder)
@@ -188,7 +188,7 @@ class KodiHelper(object):
             if stream['drm_protected']:
                 is_helper = inputstreamhelper.Helper('mpd', drm='com.widevine.alpha')
                 if is_helper.check_inputstream():
-                    playitem.setProperty('inputstreamaddon', 'inputstream.adaptive')
+                    playitem.setProperty('inputstream', 'inputstream.adaptive')
                     playitem.setProperty('inputstream.adaptive.manifest_type', 'mpd')
                     playitem.setProperty('inputstream.adaptive.license_type', 'com.widevine.alpha')
 

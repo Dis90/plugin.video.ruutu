@@ -5,15 +5,15 @@ A Kodi-agnostic library for Ruutu
 import os
 import json
 import codecs
-import cookielib
+import http.cookiejar
 import time
 from datetime import datetime
 
 import requests
-import urlparse
+import urllib.parse
 from bs4 import BeautifulSoup
 import xmltodict
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 class Ruutu(object):
     def __init__(self, settings_folder, debug=False):
@@ -23,7 +23,7 @@ class Ruutu(object):
         self.tempdir = os.path.join(settings_folder, 'tmp')
         if not os.path.exists(self.tempdir):
             os.makedirs(self.tempdir)
-        self.cookie_jar = cookielib.LWPCookieJar(os.path.join(self.settings_folder, 'cookie_file'))
+        self.cookie_jar = http.cookiejar.LWPCookieJar(os.path.join(self.settings_folder, 'cookie_file'))
         self.credentials_file = os.path.join(settings_folder, 'credentials')
         try:
             self.cookie_jar.load(ignore_discard=True, ignore_expires=True)
@@ -41,12 +41,12 @@ class Ruutu(object):
     def log(self, string):
         if self.debug:
             try:
-                print '[Ruutu]: %s' % string
+                print(('[Ruutu]: %s' % string))
             except UnicodeEncodeError:
                 # we can't anticipate everything in unicode they might throw at
                 # us, but we can handle a simple BOM
-                bom = unicode(codecs.BOM_UTF8, 'utf8')
-                print '[Ruutu]: %s' % string.replace(bom, '')
+                bom = str(codecs.BOM_UTF8, 'utf8')
+                print(('[Ruutu]: %s' % string.replace(bom, '')))
             except:
                 pass
 
@@ -85,8 +85,10 @@ class Ruutu(object):
         try:
             response = json.loads(response)
             if isinstance(response, dict):
-                if 'message' in response.keys():
-                    if 'errorKey' in response['message'].keys():
+                if 'message' in list(response.keys()):
+                    if isinstance(response['message'], str):
+                        raise self.RuutuError(response['message'])
+                    elif 'errorKey' in list(response['message'].keys()):
                         raise self.RuutuError(response['message']['message'])
                         #"message":"Invalid username or password",
                         #"errorKey":"USER_NOT_FOUND",
@@ -199,9 +201,9 @@ class Ruutu(object):
         request = json.loads(self.make_request(sso_url, 'post', params=params, payload=json.dumps(payload), headers=headers))
 
         if request['g0']['data']['message'] == 'Login successful':
-            parsed = urlparse.urlparse(request['g0']['data']['redirectUri'])
-            code =  urlparse.parse_qs(parsed.query)['code']
-            state = urlparse.parse_qs(parsed.query)['state']
+            parsed = urllib.parse.urlparse(request['g0']['data']['redirectUri'])
+            code =  urllib.parse.parse_qs(parsed.query)['code']
+            state = urllib.parse.parse_qs(parsed.query)['state']
 
             access_token = self.get_tokens(code, state)['tokens']['access_token']
             gatling_token = self.create_session(access_token)['token']
@@ -395,7 +397,7 @@ class Ruutu(object):
 
             drm_json = json.loads(self.make_request(drm_check_url, 'get', params=params))
 
-            stream['drm_token'] = urllib.quote_plus(drm_json['empDrmKey']['playToken'])
+            stream['drm_token'] = urllib.parse.quote_plus(drm_json['empDrmKey']['playToken'])
             stream['video_url'] = 'https:' + drm_json['empDrmKey']['mediaLocator']
 
             mpd_playlist = xmltodict.parse(self.make_request(stream['video_url'], 'get'))
